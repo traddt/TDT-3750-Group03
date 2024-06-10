@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+
+<html lang=”en”>
+	<head>
+		<title>Javascript Events</title>
+		<! CSS Sheets. 'Nuff said.>
+		<link rel="stylesheet" href="/src/style.css">
+		<! JQuery is used for loading various objects>
+		<script src="//code.jquery.com/jquery.min.js"></script>
+		<! This is the main javascript file for most sites>
+		<script type="text/javascript" src="/src/main.js"></script>
+		
+		<!New CSS Code>
+		<style>
+			h1 {
+				text-align: center;
+				padding-bottom: 1%;
+			}
+			
+			#animDiv {
+				width: 50%;
+				height: 100px;
+				color = "#ffffff";
+				background: #f56600;
+				position: relative;
+				font-size: 18px;
+				text-align: center;
+			}
+			
+			@keyframes mymove {
+				from {left: 0px;}
+				to {left: 200px;}
+			}
+			
+			.droptarget {
+				width: 100px; 
+				height: 35px;
+				padding: 10px;
+				border: 3px solid black;
+			}
+			
+			#textfield {
+				width: 50%;
+				height: 100px;
+				background-color: #000000;
+				color: #ffffff;
+			}
+			
+		</style>
+	</head>
+
+	<body>
+		<div id="navbar">
+		</div>
+		<! Dummy object to hold the navbar>
+		<div id="spacer">
+		</div>
+		
+		<! Used to prevent the website from displaying anything until it is fully loaded>
+		<div id="loadholder">
+			<div id="loader">
+			</div>
+		</div>
+		
+		<div id="class-content">
+			<h1>JAVASCRIPT EVENTS!</h1>
+			<div id="anims">
+				<div id="animDiv" onclick="animateElem()">Click me to start the animation.</div>
+			</div>
+			
+			<div id="drags">
+				<p id="dragDemo">Try dragging the text below between these two rectangles!</p>
+
+				<div class="droptarget" ondrop="drop(event)" ondragover="allowDrop(event)">
+					<p ondragstart="dragStart(event)" ondrag="dragging(event)" draggable="true" id="dragtarget">Drag me!</p>
+				</div>
+
+				<div class="droptarget" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+			</div>
+			
+			<div id="textfield" onmousemove="colSet();" onmouseout="colRes();">
+				<p id="formDemo">Try typing something in the text field below.</p>
+				<input type="text" id="input" oninput="dispUserText();" onblur="alertText();">
+			</div>
+		</div>
+		
+		<!New JS Code>
+		<script>
+			const div1 = document.getElementById("animDiv");
+			
+			function animateElem() {
+				div1.style.animation = "mymove 4s 2";
+			}
+			
+			div1.addEventListener("animationstart", animStart);
+			div1.addEventListener("animationiteration", animRepeat);
+			div1.addEventListener("animationend", animEnd);
+			
+			function animStart() {
+				this.innerHTML = "The animation has started";
+				this.style.backgroundColor = "#522d80";
+			}
+			
+			function animRepeat() {
+				this.innerHTML = "The animation was played again";
+				this.style.backgroundColor = "#000000";
+			}
+			
+			function animEnd() {
+				this.innerHTML = "The animation has completed";
+				this.style.color = "#000000";
+				this.style.backgroundColor = "#ffffff";
+			}
+			
+			function dragStart(event) {
+				event.dataTransfer.setData("Text", event.target.id);
+			}
+
+			function dragging(event) {
+				document.getElementById("dragDemo").innerHTML = "You're currently dragging the element";
+			}
+			
+			function allowDrop(event) {
+				event.preventDefault();
+			}
+			
+			function drop(event) {
+				event.preventDefault();
+				const data = event.dataTransfer.getData("Text");
+				event.target.appendChild(document.getElementById(data));
+				document.getElementById("dragDemo").innerHTML = "You dropped the element";
+			}
+			
+			function dispUserText() {
+				let text = document.getElementById("input").value;
+				document.getElementById("formDemo").innerHTML = "You wrote: " + text;
+			}
+			
+			function colSet() {
+				document.getElementById("textfield").style.color = "#000000";
+				document.getElementById("textfield").style.backgroundColor = "#ffffff";
+			}
+			
+			function colRes() {
+				document.getElementById("textfield").style.color = "#ffffff";
+				document.getElementById("textfield").style.backgroundColor = "#000000";
+			}
+			
+			function alertText() {
+				alert("It looks like you typed in \"" + document.getElementById("input").value + "\".");
+			}
+		</script>
+	</body>
+</html>
